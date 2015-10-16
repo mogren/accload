@@ -17,10 +17,12 @@ func main() {
 	})
 	attacker := vegeta.NewAttacker()
 
-	var results vegeta.Results
+	var metrics vegeta.Metrics
 	for res := range attacker.Attack(targeter, rate, duration) {
-		results = append(results, *res)
+		metrics.Add(res)
 	}
+	metrics.Close()
 
-	fmt.Printf("%d results\n", results.Len())
+	fmt.Printf("%d results\n", metrics.Requests)
+	fmt.Printf("99th percentile: %s\n", metrics.Latencies.P99)
 }
