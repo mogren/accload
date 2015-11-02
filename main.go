@@ -5,9 +5,23 @@ import (
 	"time"
 
 	vegeta "github.com/tsenart/vegeta/lib"
+	"github.com/BurntSushi/toml"
 )
 
+type tomlConfig struct {
+	Name 		string
+	Rate 		uint64
+	Duration 	uint64
+}
+
 func main() {
+
+	var config tomlConfig
+	if _, err := toml.DecodeFile("example.toml", &config); err != nil {
+		fmt.Println("No config file, using default settings.")
+		config.Name = "Default"
+	}
+	fmt.Printf("Title: %s\n", config.Name)
 
 	rate := uint64(100) // per second
 	duration := 4 * time.Second
